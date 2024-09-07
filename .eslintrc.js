@@ -5,7 +5,6 @@ module.exports = {
       jest: true,
     },
     extends: [
-      'airbnb-base',
       'plugin:jest/all',
     ],
     globals: {
@@ -16,8 +15,9 @@ module.exports = {
       ecmaVersion: 2018,
       sourceType: 'module',
     },
-    plugins: ['jest'],
+    plugins: ['jest', 'prettier'],
     rules: {
+      'prettier/prettier': 2,
       'max-classes-per-file': 'off',
       'no-underscore-dangle': 'off',
       'no-console': 'off',
