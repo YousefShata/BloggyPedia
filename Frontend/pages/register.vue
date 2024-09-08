@@ -2,7 +2,7 @@
 <template>
   <NavBar />
   <div class="container">
-    <Register />
+  <Register />
   </div>
 </template>
 
