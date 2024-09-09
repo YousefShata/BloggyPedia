@@ -1,5 +1,8 @@
 import User from "../Models/User";
+import mongoose from 'mongoose';
 import crypto from 'crypto';
+import redisClient from "../db/redis";
+import { v4 as uuid } from 'uuid';
 import { Request, Response } from 'express';
 
 
@@ -36,6 +39,7 @@ class UserController{
         return res.status(500).json({error: err})
         }
     }
+
     static async login(req: Request, res: Response){
         let data: any;
         if (!req.body){
@@ -51,15 +55,37 @@ class UserController{
         }
 
         const hashedPassword = crypto.createHash('sha1').update(data.password).digest('hex');
-        try{
-        const foundUser = await User.findOne({email: data.email, password: hashedPassword});
-        if (foundUser){
-            return res.status(200).json({message: "User logged in"});
-        }
-        return res.status(404).json({error: "Invalid Email or Password"});
-        }
-        catch(err){
-            return res.status(500).json({error: err})
+        try {
+            const foundUser = await User.findOne({ email: data.email, password: hashedPassword });
+            
+            // Check if the user exists
+            if (!foundUser) {
+                return res.status(404).json({ error: "Invalid Email or Password" });
+            }
+    
+            // If user is found, proceed with Redis logic
+            const token = uuid();
+            const key = `auth-${token}`;
+            const userId: mongoose.Types.ObjectId = foundUser._id as mongoose.Types.ObjectId;
+    
+            console.log("User found");
+    
+            // Check if Redis client is alive before interacting with it
+            if (!redisClient.isAlive()) {
+                console.error('Redis client is not connected.');
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+    
+            try {
+                // Store token in Redis
+                await redisClient.set(key, userId.toString(), 86400); // Store user ID for 24 hours
+                return res.status(200).json({ token });
+            } catch (error) {
+                console.error('Redis error:', error);
+                return res.status(500).json({ error: 'Redis error occurred' });
+            }
+        } catch (err) {
+            return res.status(500).json({ error:'Internal server error' });
         }
     }
 }

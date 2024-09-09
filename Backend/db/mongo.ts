@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import User from '../Models/User';
 
 class DBClient{
     client: any;
