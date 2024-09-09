@@ -1,16 +1,12 @@
 <template>
-    <div>
-      <h1 class="">Hello World!</h1>
-    </div>
-  </template>
-  
-  <script setup>
-  </script>
-  
-  <style scoped>
-  h1 {
-    font-size: 3em;
-    text-align: center;
-    margin-top: 50px;
-  }
-  </style>  
+  <NavBar />
+  <div class="container">
+    <!-- Home component from the components directory -->
+    <Home />
+  </div>
+</template>
+
+<script setup>
+import NavBar from '~/components/NavBar.vue';
+import Home from '~/components/blogging/Home.vue';
+</script>
