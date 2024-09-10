@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async register(credentials) {
             try {
-                await axios.post('/api/register', credentials);
+                await axios.post('http://localhost:5000/api/register', credentials);
             } catch (error) {
                 console.log(error);
             }
