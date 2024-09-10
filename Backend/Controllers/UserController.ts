@@ -88,6 +88,26 @@ class UserController{
             return res.status(500).json({ error:'Internal server error' });
         }
     }
+    
+    static async logout(req: Request, res:Response){
+        const authHeader = req.headers['authorization'];
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const token = authHeader.split(' ')[1];
+
+        const foundToken = await redisClient.get(`auth-${token}`);
+        if (!foundToken) {
+          return res.status(401).json({ error: 'Unauthorized' });
+        }
+        try {
+            await redisClient.del(`auth-${token}`);
+            return res.status(204).send(); // Successful logout, no content to return
+        } catch (error) {
+            console.error('Error deleting token from Redis:', error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+    }
 }
 
 export default UserController;
