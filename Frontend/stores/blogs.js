@@ -1,6 +1,5 @@
 // stores/blogs.js
 import { defineStore } from 'pinia';
-import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 export const useBlogStore = defineStore('blogs', {
@@ -26,10 +25,11 @@ export const useBlogStore = defineStore('blogs', {
         },
         async CreateBlog(data) {
             try {
-                await axios.post('/api/createBlog', data);
-            } catch (error) {
-                console.log(error);
-            }
+                //const response = await axios.post('http://your-api-endpoint.com/blogs', blogData);
+                this.blogs.push(response.data); // Add the saved blog to the state
+              } catch (error) {
+                console.error('Failed to save blog:', error);
+              }
         },
     },
 });

@@ -12,8 +12,11 @@
   "dependencies": {
     "@pinia/nuxt": "^0.5.4",
     "axios": "^1.7.7",
+    "jquery": "^3.4.1",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
+    "popper.js": "^1.16.0",
+    "summernote": "^0.8.18",
     "vue": "latest",
     "vue-router": "latest"
   },

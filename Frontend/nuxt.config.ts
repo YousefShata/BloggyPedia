@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  css: ["~/assets/css/main.css"],
+  plugins: [
+    { src: '~/plugins/summernote.js', mode: 'client' }
+  ],
+  css: [
+    "~/assets/css/main.css",
+    "summernote/dist/summernote-bs4.min.css",
+  ],
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   modules: ["@pinia/nuxt"],
