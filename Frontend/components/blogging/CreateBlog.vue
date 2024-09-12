@@ -17,24 +17,25 @@ const summernote = ref(null);
 onMounted(() => {
   if (process.client) {
     $(summernote.value).summernote({
-      placeholder: 'Start typing...',
+      placeholder: "Start typing...",
       tabsize: 2,
       height: 200,
       toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'picture', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
+        ["style", ["style"]],
+        ["font", ["bold", "underline", "clear", "fontsize"]],
+        ["color", ["color"]],
+        ["para", ["ul", "ol", "paragraph"]],
+        ["table", ["table"]],
+        ["insert", ["link", "picture", "video"]],
+        ["view", ["fullscreen", "codeview", "help"]],
       ],
+      fontsize: ["8", "9", "10", "11", "12", "14", "16", "18", "24", "36"],
     });
   }
 });
 
 const submitBlog = async () => {
-  const content = $(summernote.value).summernote('code');
+  const content = $(summernote.value).summernote("code");
   console.log(content);
 
   // You can call your store's save action here
