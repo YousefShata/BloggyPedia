@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   ],
   css: [
     "~/assets/css/main.css",
+    "bootstrap/dist/css/bootstrap.min.css",
     "summernote/dist/summernote-bs4.min.css",
   ],
   compatibilityDate: "2024-04-03",
