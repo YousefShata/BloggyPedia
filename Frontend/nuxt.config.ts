@@ -1,17 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  plugins: [
-    { src: '~/plugins/summernote.js', mode: 'client' }
-  ],
   css: [
-    "~/assets/css/main.css",
+    "~/assets/css/main.css", // Your Tailwind CSS file
     "bootstrap/dist/css/bootstrap.min.css",
     "summernote/dist/summernote-bs5.min.css",
   ],
-  compatibilityDate: "2024-04-03",
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+
+  plugins: [{ src: "~/plugins/summernote.js", mode: "client" }],
   devtools: { enabled: true },
   modules: ["@pinia/nuxt"],
-  // build: {
-  //   transpile: ["pinia"],
-  // },
+  compatibilityDate: "2024-09-12",
 });

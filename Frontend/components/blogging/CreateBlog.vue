@@ -1,8 +1,10 @@
 <template>
-  <div class="container">
-    <h2>Create your blog</h2>
-    <textarea ref="summernote"></textarea>
-    <button @click="submitBlog">Save Blog</button>
+  <div class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4">Create your blog</h2>
+    <textarea ref="summernote" class="w-full p-3 border rounded"></textarea>
+    <button class="bg-black text-white py-2 px-3 rounded" @click="submitBlog">
+      Create Blog
+    </button>
   </div>
 </template>
 
