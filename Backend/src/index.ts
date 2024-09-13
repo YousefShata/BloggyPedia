@@ -9,10 +9,18 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 require('dotenv').config();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: 'GET,POST',
+    allowedHeaders: 'Content-Type',
+};
+
+app.use(cors(corsOptions));
 
 app.listen(PORT, () =>  {
     console.log(`Server is starting at port:${PORT}`)

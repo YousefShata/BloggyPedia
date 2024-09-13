@@ -13,6 +13,8 @@ import { ref, onMounted } from "vue"; // refence elements to bind them to the te
 import { useRouter } from "#app"; // for routing
 import { useBlogStore } from "@/stores/blogs";
 
+const authStore = useAuthStore();
+
 const router = useRouter();
 const blogStore = useBlogStore();
 const summernote = ref(null);
@@ -40,7 +42,16 @@ const submitBlog = async () => {
   const content = $(summernote.value).summernote("code");
   console.log(content);
 
-  // You can call your store's save action here
-  // await blogStore.saveBlog({ content });
+  console.log(authStore);
+  try {
+    await blogStore.createBlog({
+      content: content,
+      title: "test title",
+      token: authStore.token,
+    });
+    router.push("/");
+  } catch (err) {
+    console.log(err);
+  }
 };
 </script>
