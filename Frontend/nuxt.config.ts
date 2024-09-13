@@ -12,7 +12,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-
   plugins: [{ src: "~/plugins/summernote.js", mode: "client" }],
   devtools: { enabled: true },
   modules: ["@pinia/nuxt"],

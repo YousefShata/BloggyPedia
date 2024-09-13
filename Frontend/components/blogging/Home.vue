@@ -1,3 +1,4 @@
+<!-- components/blogging/Home.vue -->
 <template>
   <h2>Explore blogs</h2>
     <div class="min-h-screen flex items-center justify-center bg-gray-100">

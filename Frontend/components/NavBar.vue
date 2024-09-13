@@ -5,7 +5,10 @@
       <!-- Left side: Links -->
       <div class="space-x-10">
         <nuxt-link to="/" class="text-white no-underline hover:text-gray-400">Home</nuxt-link>
-        <nuxt-link to="/register" class="text-white no-underline hover:text-gray-400">Register</nuxt-link>
+        <template v-if="!authStore.isLoggedIn">
+          <nuxt-link to="/register" class="text-white no-underline hover:text-gray-400">Register</nuxt-link>
+        </template>
+        
         <!-- Show login link only if user is not logged in -->
         <template v-if="!authStore.isLoggedIn">
           <nuxt-link to="/login" class="text-white no-underline hover:text-gray-400">Login</nuxt-link>

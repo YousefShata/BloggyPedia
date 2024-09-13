@@ -8,4 +8,8 @@
 <script setup>
 import NavBar from "~/components/NavBar.vue";
 import Login from "~/components/auth/Login.vue";
+definePageMeta({
+  middleware: 'auth' // This applies the 'auth' middleware to this page
+});
+
 </script>

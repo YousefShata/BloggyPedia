@@ -39,7 +39,6 @@
   const email = ref("");
   const password = ref("");
   const router = useRouter();
-
   const login = async () => {
     try {
       await authStore.login({ email: email.value, password: password.value });

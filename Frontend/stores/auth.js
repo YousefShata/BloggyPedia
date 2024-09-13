@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', {
         async register(credentials) {
             try {
                 await axios.post('http://localhost:5000/api/register', credentials);
+                this.isLoggedIn = true;
             } catch (error) {
                 console.log(error);
             }
@@ -22,10 +23,15 @@ export const useAuthStore = defineStore('auth', {
             this.user = response.data.user;
             this.token = response.data.token;
             this.isLoggedIn = true;
+
             console.log("Logged in and status is: ", this.isLoggedIn);
             console.log(credentials);
 
-            localStorage.setItem('token', this.token);
+            if (typeof window !== 'undefined' && window.localStorage) {
+                localStorage.setItem('token', this.token);
+            }
+
+            axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
         },
         async logout() {
             try {
@@ -39,7 +45,9 @@ export const useAuthStore = defineStore('auth', {
                 this.user = null;
                 this.token = null;
                 this.isLoggedIn = false;
-                localStorage.removeItem('token');
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    localStorage.removeItem('token');
+                }
                 const router = useRouter();
                 if (router) {
                     router.push('/login');
@@ -52,4 +60,33 @@ export const useAuthStore = defineStore('auth', {
             }
         },
     },
+    async checkLogin() {
+        try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    this.isLoggedIn = false;
+                    return;
+                }
+            }
+
+            const response = await axios.get('http://localhost:5000/api/check-auth', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.status == 200) {
+                this.isLoggedIn = true;
+            } else {
+                this.isLoggedIn = false;
+                localStorage.removeItem('token');
+            }
+        } catch (error) {
+            this.isLoggedIn = false;
+            if (typeof window !== 'undefined' && window.localStorage) {
+                localStorage.removeItem('token');
+            }
+        }
+    }
 });
