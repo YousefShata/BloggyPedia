@@ -16,8 +16,8 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 const corsOptions = {
     origin: 'http://localhost:3000',
-    methods: 'GET,POST',
-    allowedHeaders: 'Content-Type',
+    methods: 'GET, POST, PUT,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));

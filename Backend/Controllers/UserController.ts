@@ -117,20 +117,28 @@ class UserController {
     }
   }
 
-  static async checkAuth(req: Request, res: Response, next: NextFunction) {
+  static async checkAuth(req: Request, res: Response) {
     const authHeader = req.headers['authorization'];
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+
     const token = authHeader.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
-    const foundToken = await redisClient.get(`auth-${token}`);
-    if (!foundToken) {
-      res.redirect('/login');
-      return res.status(401).json({ error: 'Unauthorized', isLoggedin: false });
-    }
-    next();
+    console.log(token);
+    try {
+      const foundToken = await redisClient.get(`auth-${token}`);
+      console.log(foundToken);
+      if (!foundToken) {
+          return res.status(401).json({ error: 'Unauthorized', isLoggedin: false });
+      }
+      return res.status(200).json({token})
+  } catch (error) {
+      console.error('Error checking token in Redis:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
   }
 }
 

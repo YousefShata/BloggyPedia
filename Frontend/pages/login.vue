@@ -1,15 +1,22 @@
 <template>
-  <NavBar />
-  <div class="container">
-    <Login />
+  <div v-if="!authStore.loading">
+    <NavBar />
+    <div class="container">
+      <Login />
+    </div>
+  </div>
+  <div v-else class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading, please wait...</p>
   </div>
 </template>
 
 <script setup>
 import NavBar from "~/components/NavBar.vue";
 import Login from "~/components/auth/Login.vue";
+import { useAuthStore } from "~/stores/auth";
+const authStore = useAuthStore();
 definePageMeta({
-  middleware: 'auth' // This applies the 'auth' middleware to this page
+  middleware: "auth", // This applies the 'auth' middleware to this page
 });
-
 </script>

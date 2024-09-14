@@ -41,7 +41,7 @@ export const useBlogStore = defineStore('blogs', {
                 console.log(response);
                 //this.blogs.push(response.data); // Add the saved blog to the state
               } catch (error) {
-                console.error('Failed to save blog:', error);
+                console.error('Failed to save blog:', error.response.data);
               }
         },
     },

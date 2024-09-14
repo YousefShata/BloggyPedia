@@ -8,12 +8,14 @@ export const useAuthStore = defineStore('auth', {
         user: null,
         token: null,
         isLoggedIn: false,
+        loading: true,
     }),
     actions: {
         async register(credentials) {
             try {
                 await axios.post('http://localhost:5000/api/register', credentials);
                 this.isLoggedIn = true;
+                this.loading = false;
             } catch (error) {
                 console.log(error);
             }
@@ -59,34 +61,46 @@ export const useAuthStore = defineStore('auth', {
                 console.error('Error logging out:', error);
             }
         },
-    },
-    async checkLogin() {
-        try {
-            if (typeof window !== 'undefined' && window.localStorage) {
-                const token = localStorage.getItem('token');
-                if (!token) {
+        async checkLogin() {
+            try {
+                //if (process.server) return;
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    const token = localStorage.getItem('token');
+                    console.log(token);
+                    this.token = token
+                    if (!token) {
+                        this.isLoggedIn = false;
+                        return;
+                    }
+                }
+                console.log(this.token);
+                const response = await axios.get('http://localhost:5000/api/check-auth', {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                });
+    
+                if (response.status == 200) {
+                    console.log("status 200");
+                    this.isLoggedIn = true;
+                } else {
+                    console.log("status 404");
                     this.isLoggedIn = false;
-                    return;
+                    localStorage.removeItem('token');
                 }
-            }
-
-            const response = await axios.get('http://localhost:5000/api/check-auth', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.status == 200) {
-                this.isLoggedIn = true;
-            } else {
+            } catch (error) {
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    response: error.response ? error.response.data : null,
+                });
                 this.isLoggedIn = false;
-                localStorage.removeItem('token');
-            }
-        } catch (error) {
-            this.isLoggedIn = false;
-            if (typeof window !== 'undefined' && window.localStorage) {
-                localStorage.removeItem('token');
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    localStorage.removeItem('token');
+                }
+            } finally {
+                this.loading = false;
             }
         }
-    }
+    },
 });
