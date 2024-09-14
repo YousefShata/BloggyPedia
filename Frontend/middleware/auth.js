@@ -10,8 +10,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         await authStore.checkLogin();
     }
 
-    const token = authStore.token || (typeof window !== 'undefined' && localStorage.getItem('token'));ل
-  
+    const token = authStore.token || (typeof window !== 'undefined' && localStorage.getItem('token'));
+
     if (!token && to.path !== '/login' && to.path !== '/register') {
         // Redirect to login if the token is missing and the user is not already on the login or register page
         return navigateTo('/login');

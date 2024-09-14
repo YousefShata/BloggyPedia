@@ -3,15 +3,15 @@
   <h2>Explore blogs</h2>
     <div class="min-h-screen flex items-center justify-center bg-gray-100">
         <!-- Add code here -->
-         <Blog />
+         <PostList />
     </div>
   </template>
   
   <script setup>
   import { ref } from 'vue'; // refence elements to bind them to the template
   import { useRouter } from 'vue-router'; // for routing
-  import { useBlogStore } from '@/stores/blogs';
-  import Blog from '@/components/blogging/Blog.vue';
+  // import Blog from '~/components/blogging/PostList.vue';
+  import PostList from '~/components/blogging/PostList.vue';
   const router = useRouter();
   
     /*Add function loginc here*/
