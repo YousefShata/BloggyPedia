@@ -55,22 +55,21 @@ class BlogController {
     static async getBlog (req: Request, res: Response){
         const { blogId } = req.params;
         if (!blogId)
-            res.status(404).json({error:"No blog ID provided"});
+            return res.status(404).json({error:"No blog ID provided"});
         try {
             const blog = await Blog.findById({ _id: blogId });
             if (!blog)
-                res.status(404).json({error: "Blog not found "});
-
+                return res.status(404).json({error: "Blog not found "});
             console.log("Blog retrived");
-            res.status(200).json({blog});
+            return res.status(200).json({blog});
         } catch (error) {
-            res.status(500).json({error: error});
+           return res.status(500).json({error: error});
         }
     }
 
     static async getAllBlogs (req: Request, res: Response){
         try {
-            const allBlogs = Blog.find({});
+            const allBlogs = await Blog.find({});
             res.status(200).json({allBlogs});
         } catch (error) {
             res.status(500).json({error: error});

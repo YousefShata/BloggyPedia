@@ -6,6 +6,7 @@ export const useBlogStore = defineStore('blogs', {
     state: () => ({
         // These are the expected data that we might use in the blog post
         blogs: [],
+        blog: null,
         header: null,
         body: null,
         username: null,
@@ -17,19 +18,19 @@ export const useBlogStore = defineStore('blogs', {
         // when a user hits a route (like controllers in the backend)
 
         /* Example function */
-        async getAllBlogs(data) {
+        async getAllBlogs() {
             try {
-                const response = await axios.get('http://localhost:5000/api/getAllBlogs', data);
-                this.blogs = response;
+                const response = await axios.get('http://localhost:5000/api/getAllBlogs');
+                this.blogs = response.data.allBlogs;
             } catch (error) {
                 console.log(error);
             }
         },
 
-        async getBlog(data) {
+        async getBlog(blogId) {
             try {
-                const response = await axios.get(`http://localhost:5000/api/getBlog/${blogs.id}`, data);
-                this.blogs.push(response.data);
+                const response = await axios.get(`http://localhost:5000/api/getBlog/${blogId}`);
+                this.blog = response.data.blog;
             } catch (error) {
                 console.log(error);
             }
@@ -39,7 +40,7 @@ export const useBlogStore = defineStore('blogs', {
             try {
                 const response = await axios.post('http://localhost:5000/api/createBlog', data);
                 console.log(response);
-                //this.blogs.push(response.data); // Add the saved blog to the state
+                this.blogs.push(response.data); // Add the saved blog to the state
               } catch (error) {
                 console.error('Failed to save blog:', error.response.data);
               }

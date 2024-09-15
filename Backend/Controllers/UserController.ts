@@ -127,10 +127,8 @@ class UserController {
     const token = authHeader.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
-    console.log(token);
     try {
       const foundToken = await redisClient.get(`auth-${token}`);
-      console.log(foundToken);
       if (!foundToken) {
           return res.status(401).json({ error: 'Unauthorized', isLoggedin: false });
       }
