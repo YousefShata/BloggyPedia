@@ -13,9 +13,20 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async register(credentials) {
             try {
-                await axios.post('http://localhost:5000/api/register', credentials);
-                this.isLoggedIn = true;
+                await axios.post('http://localhost:5000/api/register', credentials,{
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                    }
+                });
+                this.isLoggedIn = false;
                 this.loading = false;
+                const router = useRouter();
+                if (router) {
+                    router.push('/login');
+                    console.log("Registered");
+                } else {
+                    console.error('Router is not defined');
+                }
             } catch (error) {
                 console.log(error);
             }

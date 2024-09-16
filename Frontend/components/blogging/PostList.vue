@@ -7,10 +7,14 @@
       class="bg-white shadow-md rounded-lg overflow-hidden mb-6"
     >
       <div class="flex p-6">
-        <!-- <img :src="post.userAvatar" alt="User avatar" class="w-16 h-16 rounded-full object-cover mr-4"> -->
+        <img
+          :src="`http://localhost:5000/${post.userId.profilePicture}`"
+          alt="User avatar"
+          class="w-16 h-16 rounded-full object-cover mr-4"
+        />
         <div class="flex-1">
           <h2 class="text-2xl font-semibold mb-2">{{ post.title }}</h2>
-          <!-- <p class="text-gray-700 text-sm mb-4">By {{ post.username }}</p> -->
+          <p class="text-gray-700 text-sm mb-4">By {{ post.userId.name }}</p>
           <!-- <p class="text-gray-800 mb-4">{{ post.content }}</p> -->
           <button
             @click="goToPost(post._id)"
@@ -35,7 +39,7 @@ const posts = ref([]);
 onMounted(async () => {
   await blogStore.getAllBlogs();
   posts.value = blogStore.blogs; // Update posts with the store data
-
+  console.log(posts.value);
 });
 function goToPost(Id) {
   if (router) {
