@@ -3,12 +3,16 @@ import mongoose, { Schema, model, Document } from "mongoose"
 interface IUser extends Document {
     email: string;
     password: string;
+    name: string;
+    profilePicture: string;
     saveUser(): Promise<void>;
 }
 
 const userSchema = new Schema<IUser>({
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    profilePicture: { type: String, default: 'public/upload/profile-pics/download.png' },
 });
 
 userSchema.methods.saveUser = async function () {

@@ -1,10 +1,21 @@
 import UserController from '../Controllers/UserController';
 import BlogController from '../Controllers/BlogController';
+import multer from 'multer';
+import path from 'path';
 import { Router } from 'express';
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'public/uploads/profile-pics'); // Directory where files will be saved
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Filename format
+    }
+  });
+const upload = multer({ storage });
 const router = Router();
 
-router.post('/api/register', UserController.register);
+router.post('/api/register',upload.single("profilePicture"), UserController.register);
 router.post('/api/login', UserController.login);
 router.post('/api/logout', UserController.logout);
 router.get('/api/check-auth', UserController.checkAuth);

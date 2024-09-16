@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import crypto from 'crypto';
 import redisClient from '../db/redis';
 import { v4 as uuid } from 'uuid';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 class UserController {
   static async register(req: Request, res: Response) {
@@ -19,6 +19,9 @@ class UserController {
     if (!data.password || typeof data.password !== 'string') {
       return res.status(400).json({ error: 'Valid password is required.' });
     }
+    if (!data.name || typeof data.name !== 'string') {
+      return res.status(400).json({ error: 'Valid name is required.' });
+    }
 
     const hashedPassword = crypto
       .createHash('sha1')
@@ -30,10 +33,16 @@ class UserController {
         return res.status(400).json({ error: 'User already exists.' });
       }
 
+      const profilePic = req.file ? req.file.path : "public/uploads/profile-pics/download.png";
+
+      console.log(profilePic);
       const newUser = new User({
         email: data.email,
         password: hashedPassword,
+        name: data.name,
+        profilePicture: profilePic
       });
+      console.log(newUser);
       await newUser.saveUser();
       return res.status(200).json({ message: 'User added Succefully' });
     } catch (err) {
@@ -133,10 +142,10 @@ class UserController {
           return res.status(401).json({ error: 'Unauthorized', isLoggedin: false });
       }
       return res.status(200).json({token})
-  } catch (error) {
-      console.error('Error checking token in Redis:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-  }
+    } catch (error) {
+        console.error('Error checking token in Redis:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 }
 

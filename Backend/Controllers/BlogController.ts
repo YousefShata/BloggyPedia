@@ -69,7 +69,8 @@ class BlogController {
 
     static async getAllBlogs (req: Request, res: Response){
         try {
-            const allBlogs = await Blog.find({});
+            const allBlogs = await Blog.find({}).populate('userId', 'name profilePicture');
+            console.log(allBlogs);
             res.status(200).json({allBlogs});
         } catch (error) {
             res.status(500).json({error: error});
