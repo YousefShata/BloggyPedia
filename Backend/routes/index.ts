@@ -22,6 +22,10 @@ router.get('/api/check-auth', UserController.checkAuth);
 router.post('/api/createBlog', BlogController.createBlog);
 router.get('/api/getBlog/:blogId', BlogController.getBlog);
 router.get('/api/getAllBlogs', BlogController.getAllBlogs);
+router.get('/api/profile', UserController.profile);
+router.put('/api/updateProfile',upload.single("profilePicture"), UserController.updateProfile);
+router.put('/api/editBlog/:blogId', BlogController.editBlog);
+router.get('/api/checkAuthor', BlogController.checkAuthor);
 //router.get('/api/login', func);
 //router.get('/api/logout', func);
 

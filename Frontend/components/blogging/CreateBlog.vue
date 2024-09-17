@@ -1,6 +1,20 @@
 <template>
   <div class="container mx-auto p-6">
     <h2 class="text-2xl font-bold mb-4">Create your blog</h2>
+    <!-- Title Input Field -->
+    <div class="mb-4">
+      <label for="blogTitle" class="block text-lg font-semibold mb-2"
+        >Title</label
+      >
+      <input
+        id="blogTitle"
+        v-model="blogTitle"
+        type="text"
+        placeholder="Enter blog title"
+        class="w-full p-3 border rounded"
+      />
+    </div>
+
     <textarea ref="summernote" class="w-full p-3 border rounded"></textarea>
     <button class="bg-black text-white py-2 px-3 rounded" @click="submitBlog">
       Create Blog
@@ -40,13 +54,18 @@ onMounted(() => {
 
 const submitBlog = async () => {
   const content = $(summernote.value).summernote("code");
+  if (!blogTitle.value) {
+    alert("Please enter a blog title");
+    return;
+  }
+
   console.log(content);
 
   console.log(authStore);
   try {
     await blogStore.createBlog({
       content: content,
-      title: "test title",
+      title: blogTitle.value,
       token: authStore.token,
     });
     router.push("/");

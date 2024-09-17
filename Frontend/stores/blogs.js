@@ -7,11 +7,7 @@ export const useBlogStore = defineStore('blogs', {
         // These are the expected data that we might use in the blog post
         blogs: [],
         blog: null,
-        header: null,
-        body: null,
-        username: null,
-        avatar: null,
-        thumbnailImage: null,
+        currentUser: null,
     }),
     actions: {
         // Here we will handle what happens
@@ -45,5 +41,32 @@ export const useBlogStore = defineStore('blogs', {
                 console.error('Failed to save blog:', error.response.data);
               }
         },
+        async editBlog(blogId, data) {
+            try {
+                const response = await axios.put(`http://localhost:5000/api/editBlog/${blogId}`, data);
+                console.log(response);
+                this.blog = response.data;
+              } catch (error) {
+                console.error('Failed to save blog:', error.response.data);
+              }
+        },
+        
+        async checkAuthor(){
+                let token;
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    token = localStorage.getItem('token');
+                    if (!token) {
+                        this.isLoggedIn = false;
+                        return;
+                    }
+                console.log(token);
+                const response = await axios.get('http://localhost:5000/api/checkAuthor', {
+                    headers: {
+                    'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.currentUser = response.data.userId
+            }
+        }
     },
 });

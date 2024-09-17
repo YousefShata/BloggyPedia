@@ -147,6 +147,60 @@ class UserController {
         res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
+  static async profile(req: Request, res: Response){
+    const authHeader = req.headers['authorization'];
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+    try {
+      const foundToken = await redisClient.get(`auth-${token}`);
+      if (!foundToken) {
+          return res.status(401).json({ error: 'Unauthorized', isLoggedin: false });
+      }
+      const user = await User.findById({ _id: foundToken });
+            if (!user)
+                return res.status(404).json({error: "user not found "});
+            console.log("User retrived");
+            return res.status(200).json({user});
+    } catch (error) {
+        console.error('Error checking token in Redis:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  static async updateProfile(req: Request, res: Response){
+    let data: any;
+    if (!req.body){
+        return res.status(400).json({error: 'body is empty'});
+    }
+    data = req.body;
+    const profilePicture = req.file ? req.file.path : undefined; // Get the file path if a file was uploaded
+
+    if (!data.name || typeof data.name !== 'string') {
+      return res.status(400).json({ error: 'Valid name is required.' });
+    }
+
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        data.id, 
+        { name: data.name, profilePicture: profilePicture },
+        { new: true, runValidators: true } 
+      );
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      return res.status(500).json({ error: 'Error updating user' });
+    }
+  }
 }
 
 export default UserController;

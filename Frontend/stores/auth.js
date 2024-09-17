@@ -112,6 +112,43 @@ export const useAuthStore = defineStore('auth', {
             } finally {
                 this.loading = false;
             }
-        }
+        },
+        async myProfile() {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    const token = localStorage.getItem('token');
+                    console.log(token);
+                    this.token = token
+                    if (!token) {
+                        this.isLoggedIn = false;
+                        return;
+                    }
+                }
+
+                const response = await axios.get(`http://localhost:5000/api/profile`,{ headers: {
+                    'Authorization': `Bearer ${this.token}`
+                    }
+                });
+                this.user = response.data.user;
+                const router = useRouter();
+                router.push('/profile');
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async UpdateProfile(credentials){
+            try{
+            const response = await axios.put('http://localhost:5000/api/updateProfile', credentials,{
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            });
+            this.user = response.data
+        } catch (error) {
+        console.error('Failed to update profile:', error);
+        throw error; // Re-throw error to handle it in the component
+            }
+        },
     },
 });

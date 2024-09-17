@@ -38,12 +38,12 @@ const posts = ref([]);
 
 onMounted(async () => {
   await blogStore.getAllBlogs();
-  posts.value = blogStore.blogs; // Update posts with the store data
+  posts.value = blogStore.blogs;
   console.log(posts.value);
 });
 function goToPost(Id) {
   if (router) {
-    router.push(`/getBlog/${Id}`); // Redirect to the blog page
+    router.push(`/getBlog/${Id}`);
   } else {
     console.error("Router is not defined");
   }

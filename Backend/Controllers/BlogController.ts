@@ -70,13 +70,65 @@ class BlogController {
     static async getAllBlogs (req: Request, res: Response){
         try {
             const allBlogs = await Blog.find({}).populate('userId', 'name profilePicture');
-            console.log(allBlogs);
             res.status(200).json({allBlogs});
         } catch (error) {
             res.status(500).json({error: error});
         }
     }
 
+    static async editBlog(req: Request, res: Response){
+        const { blogId } = req.params;
+        let data: any;
+        if (!blogId)
+            return res.status(404).json({error:"No blog ID provided"});
+        if (!req.body){
+            return res.status(400).json({error: 'body is empty'});
+        }
+        data = req.body;
+
+        if (!data.content || typeof data.content !== 'string') {
+            return res.status(400).json({ error: 'No contect provided.' });
+        }
+    
+        if (!data.title || typeof data.content !== 'string') {
+            return res.status(400).json({ error: 'No title provided.' });
+        }
+        console.log("UpdatedBlog ID: "+ blogId);
+        try {
+            const updatedBlog = await Blog.findByIdAndUpdate(
+                blogId, 
+                { title: data.title, content: data.content  },
+                { new: true, runValidators: true } 
+            );
+            if (!updatedBlog)
+                return res.status(404).json({error: "Blog not found "});
+
+            console.log("Blog retrived");
+            return res.status(200).json({updatedBlog});
+        } catch (error) {
+           return res.status(500).json({error: error});
+        }
+    }
+    static async checkAuthor(req: Request, res: Response){
+        const authHeader = req.headers['authorization'];
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const token = authHeader.split(' ')[1];
+
+        if (!redisClient.isAlive()) {
+            console.error('Redis client is not connected.');
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+
+        const userId:mongoose.Types.ObjectId = await redisClient.get(`auth-${token}`) as mongoose.Types.ObjectId;
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        
+        return res.status(200).json({ userId });
+    }
 }
 
 export default BlogController;
