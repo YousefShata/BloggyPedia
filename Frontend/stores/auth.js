@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { useRouter } from '#app';
 import axios from 'axios';
+import { FaceSmileIcon } from '@heroicons/vue/16/solid';
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -149,6 +150,27 @@ export const useAuthStore = defineStore('auth', {
         console.error('Failed to update profile:', error);
         throw error; // Re-throw error to handle it in the component
             }
+        },
+
+        async deleteProfile() {
+            try {
+                await axios.delete(`http://localhost:5000/api/deleteProfile`, {
+                    params: { id: this.user._id }, // Send user ID as a query parameter
+                  });
+                this.user = null;
+                this.token = null;
+                this.isLoggedIn = false;
+                
+                const router = useRouter();
+                if (router) {
+                    router.push('/login');
+                    console.log("logged out and satus is: ", this.isLoggedIn);
+                } else {
+                    console.error('Router is not defined');
+                }
+              } catch (error) {
+                console.error('Failed to delete the User:', error.response.data);
+              }
         },
     },
 });

@@ -1,4 +1,5 @@
 import User from '../Models/User';
+import Blog from '../Models/Blog';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 import redisClient from '../db/redis';
@@ -200,6 +201,25 @@ class UserController {
     } catch (error) {
       return res.status(500).json({ error: 'Error updating user' });
     }
+  }
+
+  static async deleteProfile(req: Request, res: Response){
+  const { id } = req.query; // Retrieve the user ID from the query params
+
+  if (!id) {
+    return res.status(400).json({ error: 'No user ID provided' });
+  }
+    try {
+      await Blog.deleteMany({ userId: id });
+
+      const deletedProfile = await User.findByIdAndDelete(id);
+        if (!deletedProfile) {
+           return res.status(404).json({ error: "User not found" });
+        }
+         return res.status(200).json({ message: "User deleted successfully", deletedProfile });
+      } catch (error) {
+        return res.status(500).json({ error: "Failed to delete the User" });
+      }
   }
 }
 

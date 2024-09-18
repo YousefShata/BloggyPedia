@@ -56,6 +56,13 @@
         >
           Save Changes
         </button>
+        <button
+          type="button"
+          class="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200 mt-4"
+          @click="deleteUser"
+        >
+          Delete Account
+        </button>
       </form>
     </div>
   </div>
@@ -106,6 +113,18 @@ const updateProfile = async () => {
     router.push("/");
   } catch (error) {
     console.error("Failed to update profile:", error);
+  }
+};
+
+const deleteUser = async () => {
+  const userId = user.value._id;
+  const confirmation = confirm("Are you sure you want to delete this user?");
+  if (!confirmation) return;
+
+  try {
+    await authStore.deleteProfile(userId);
+  } catch (err) {
+    console.log("Failed to delete user:", err);
   }
 };
 </script>

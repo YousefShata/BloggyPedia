@@ -15,6 +15,7 @@ const userSchema = new Schema<IUser>({
     profilePicture: { type: String, default: 'public/upload/profile-pics/download.png' },
 });
 
+
 userSchema.methods.saveUser = async function () {
     try {
       await this.save();

@@ -26,6 +26,9 @@ router.get('/api/profile', UserController.profile);
 router.put('/api/updateProfile',upload.single("profilePicture"), UserController.updateProfile);
 router.put('/api/editBlog/:blogId', BlogController.editBlog);
 router.get('/api/checkAuthor', BlogController.checkAuthor);
+router.delete('/api/deleteBlog/:blogId', BlogController.deleteBlog);
+router.delete('/api/deleteProfile', UserController.deleteProfile);
+
 //router.get('/api/login', func);
 //router.get('/api/logout', func);
 

@@ -2,6 +2,10 @@
   <div class="container mx-auto p-6">
     <h2 class="text-2xl font-bold mb-4">Edit your blog</h2>
 
+    <button class="bg-red-500 text-white px-4 py-2 rounded" @click="deleteBlog">
+      Delete Blog
+    </button>
+
     <!-- Title Input Field -->
     <div class="mb-4">
       <label for="blogTitle" class="block text-lg font-semibold mb-2"
@@ -96,6 +100,19 @@ const updateBlog = async () => {
     router.push(`/getBlog/${blogId}`);
   } catch (err) {
     console.log("Failed to save blog:", err);
+  }
+};
+
+const deleteBlog = async () => {
+  const blogId = route.params.id;
+  const confirmation = confirm("Are you sure you want to delete this blog?");
+  if (!confirmation) return;
+
+  try {
+    await blogStore.deleteBlog(blogId);
+    router.push("/");
+  } catch (err) {
+    console.log("Failed to delete blog:", err);
   }
 };
 </script>

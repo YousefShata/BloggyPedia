@@ -50,7 +50,7 @@ export const useBlogStore = defineStore('blogs', {
                 console.error('Failed to save blog:', error.response.data);
               }
         },
-        
+
         async checkAuthor(){
                 let token;
                 if (typeof window !== 'undefined' && window.localStorage) {
@@ -67,6 +67,14 @@ export const useBlogStore = defineStore('blogs', {
                 });
                 this.currentUser = response.data.userId
             }
-        }
+        },
+
+        async deleteBlog(blogId) {
+            try {
+                const response = await axios.delete(`http://localhost:5000/api/deleteBlog/${blogId}`);
+              } catch (error) {
+                console.error('Failed to delete blog:', error.response.data);
+              }
+        },
     },
 });

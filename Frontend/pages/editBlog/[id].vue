@@ -1,10 +1,7 @@
 <template>
   <div v-if="!authStore.loading">
     <NavBar />
-    <div class="container">
-      <!-- EditBlog component from the components directory -->
-      <EditBlog />
-    </div>
+    <EditBlog />
   </div>
   <div v-else class="loading-container">
     <div class="spinner"></div>

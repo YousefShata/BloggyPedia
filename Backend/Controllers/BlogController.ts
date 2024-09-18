@@ -129,6 +129,23 @@ class BlogController {
         
         return res.status(200).json({ userId });
     }
+
+    static async deleteBlog (req: Request, res: Response){
+        const { blogId } = req.params;
+        if (!blogId)
+            return res.status(404).json({error:"No blog ID provided"});
+        try {
+            const deletedBlog = await Blog.findByIdAndDelete(blogId);
+        
+            if (!deletedBlog) {
+              return res.status(404).json({ error: "Blog not found" });
+            }
+        
+            return res.status(200).json({ message: "Blog deleted successfully", deletedBlog });
+          } catch (error) {
+            return res.status(500).json({ error: "Failed to delete blog" });
+          }
+    }
 }
 
 export default BlogController;
