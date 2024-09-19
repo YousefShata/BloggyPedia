@@ -37,7 +37,7 @@
         <template v-if="authStore.isLoggedIn">
           <button
             @click="profile"
-            class="bg-white text-black py-2 px-3 rounded duration-200 ease-in-out"
+            class="bg-white text-l text-black py-2 px-4 mr-5 rounded duration-200 ease-in-out"
           >
             Profile
           </button>
@@ -45,7 +45,7 @@
         <template v-if="authStore.isLoggedIn">
           <button
             @click="logout"
-            class="bg-white text-black py-2 px-3 rounded duration-200 ease-in-out"
+            class="logout-button bg-black text-xs border border-white font-semibold text-white py-1 px-2 rounded duration-200 ease-in-out"
           >
             Logout
           </button>
@@ -54,6 +54,13 @@
     </nav>
   </header>
 </template>
+
+<style scoped>
+.logout-button:hover {
+  background-color: white !important;
+  color: black !important;  
+}
+</style>
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";

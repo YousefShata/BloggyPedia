@@ -15,7 +15,7 @@
         <div class="flex-1">
           <h2 class="text-2xl font-semibold mb-2">{{ post.title }}</h2>
           <p class="text-gray-700 text-sm mb-4">By {{ post.userId.name }}</p>
-          <!-- <p class="text-gray-800 mb-4">{{ post.content }}</p> -->
+          <p class="text-gray-800 mb-4" v-html=getTrunctedText(post.content.toString())></p>
           <button
             @click="goToPost(post._id)"
             class="text-white bg-black px-4 py-2 rounded-md"
@@ -32,6 +32,7 @@
 import { ref } from "vue"; // refence elements to bind them to the template
 import { useRouter } from "vue-router"; // for routing
 import { useBlogStore } from "@/stores/blogs";
+import { post } from "jquery";
 const router = useRouter();
 const blogStore = useBlogStore();
 const posts = ref([]);
@@ -41,6 +42,30 @@ onMounted(async () => {
   posts.value = blogStore.blogs;
   console.log(posts.value);
 });
+
+const getTrunctedText = (content) => {
+  const contentLength = content.length;
+  const maxLength = 500;
+  const minLength = 150;
+  const truncatePoint = 100;
+
+  let truncatedContent = content;
+
+  if (contentLength > maxLength) {
+    truncatedContent = content.substring(0, maxLength);
+    const lastPeriodIndex = truncatedContent.lastIndexOf('.');
+    if (lastPeriodIndex > truncatePoint) {
+      truncatedContent = truncatedContent.substring(0, lastPeriodIndex + 1);
+    }
+    truncatedContent += '...';
+  } else if (contentLength > minLength) {
+    truncatedContent = content.substring(0, minLength);
+    truncatedContent += '...';
+  }
+
+  return truncatedContent;
+}
+
 function goToPost(Id) {
   if (router) {
     router.push(`/getBlog/${Id}`);

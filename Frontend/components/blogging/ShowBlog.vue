@@ -1,15 +1,15 @@
 <template>
   <div class="blog-container">
     <!-- Display the blog title -->
-    <h1 v-if="blog && blog.title">{{ blog.title }}</h1>
+    <h1 class="text-center" v-if="blog && blog.title">{{ blog.title }}</h1>
 
     <!-- Display the blog content rendered from Summernote using v-html -->
-    <div v-if="blog && blog.content" v-html="blog.content"></div>
+    <div class="mb-4" v-if="blog && blog.content" v-html="blog.content"></div>
 
     <button
       v-if="isAuthor"
       @click="goToEditBlog"
-      class="edit-button bg-blue-500 text-white px-3 py-2 rounded mt-4"
+      class="edit-button bg-black text-xs border border-white font-semibold text-white mr-3 py-1 px-2 rounded duration-200 ease-in-out"
     >
       Edit Blog
     </button>
@@ -20,14 +20,19 @@
 .blog-container {
   display: flex;
   flex-direction: column; /* Arrange items vertically */
-  align-items: flex-start; /* Align items to the start (left) */
+  align-items: center; /* Align items to the start (left) */
   position: relative; /* Needed for absolute positioning of button */
 }
 
 .edit-button {
   position: absolute;
   right: 0; /* Align button to the right */
-  top: 0; /* Align button to the top, or adjust as needed */
+  bottom: 0; /* Align button to the top, or adjust as needed */
+}
+.edit-button:hover {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black !important;
 }
 </style>
 

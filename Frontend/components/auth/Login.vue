@@ -29,6 +29,10 @@
           >
             Login
           </button>
+          <p>Don't have an account?</p>
+          <nuxt-link to="/register">
+            Register
+          </nuxt-link>
         </form>
       </div>
     </div>

@@ -8,7 +8,6 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'; // refence elements to bind them to the template
   import { useRouter } from 'vue-router'; // for routing
   // import Blog from '~/components/blogging/PostList.vue';
   import PostList from '~/components/blogging/PostList.vue';

@@ -47,6 +47,10 @@
         >
           Register
         </button>
+        <p>Already have an account?</p>
+        <nuxt-link to="/login">
+          Login
+        </nuxt-link>
       </form>
     </div>
   </div>
