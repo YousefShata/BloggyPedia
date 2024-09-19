@@ -23,13 +23,18 @@
           required
           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          required
-          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-        />
+        <div class="relative">
+          <input
+            v-model="password"
+            :type="isPasswordVisible ? 'text' : 'password'"
+            placeholder="Password"
+            required
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+          />
+          <span @click="togglePasswordVisibility" class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer">
+            <img :src="isPasswordVisible ? eyeOpenIcon : eyeClosedIcon" alt="Toggle visibility" class="w-5 h-5" />
+          </span>
+        </div>
         <input
           ref="fileInput"
           type="file"
@@ -51,12 +56,15 @@
 import { ref } from "vue";
 import { useRouter } from "#app";
 import { useAuthStore } from "@/stores/auth";
+import eyeOpenIcon from "@/assets/icons/eye-open.svg";
+import eyeClosedIcon from "@/assets/icons/eye-closed.svg";
 
 const authStore = useAuthStore();
 const email = ref("");
 const password = ref("");
 const name = ref("");
 const file = ref(null); // For handling file input
+const isPasswordVisible = ref(false);
 const router = useRouter();
 
 const handleFileUpload = (event) => {
@@ -77,5 +85,9 @@ const register = async () => {
   } catch (error) {
     console.error("Registration failed:", error);
   }
+};
+
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value;
 };
 </script>
