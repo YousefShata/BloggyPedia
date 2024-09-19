@@ -24,7 +24,6 @@ export const useAuthStore = defineStore('auth', {
                 const router = useRouter();
                 if (router) {
                     router.push('/login');
-                    console.log("Registered");
                 } else {
                     console.error('Router is not defined');
                 }
@@ -38,9 +37,6 @@ export const useAuthStore = defineStore('auth', {
             this.token = response.data.token;
             this.isLoggedIn = true;
 
-            console.log("Logged in and status is: ", this.isLoggedIn);
-            console.log(credentials);
-
             if (typeof window !== 'undefined' && window.localStorage) {
                 localStorage.setItem('token', this.token);
             }
@@ -50,7 +46,6 @@ export const useAuthStore = defineStore('auth', {
         async logout() {
             try {
                 this.token = localStorage.getItem('token');
-                console.log(this.token);
                 await axios.post('http://localhost:5000/api/logout', {}, {
                     headers: {
                         'Authorization': `Bearer ${this.token}`
@@ -65,7 +60,6 @@ export const useAuthStore = defineStore('auth', {
                 const router = useRouter();
                 if (router) {
                     router.push('/login');
-                    console.log("logged out and satus is: ", this.isLoggedIn);
                 } else {
                     console.error('Router is not defined');
                 }
@@ -78,14 +72,12 @@ export const useAuthStore = defineStore('auth', {
                 //if (process.server) return;
                 if (typeof window !== 'undefined' && window.localStorage) {
                     const token = localStorage.getItem('token');
-                    console.log(token);
                     this.token = token
                     if (!token) {
                         this.isLoggedIn = false;
                         return;
                     }
                 }
-                console.log(this.token);
                 const response = await axios.get('http://localhost:5000/api/check-auth', {
                     headers: {
                         'Authorization': `Bearer ${this.token}`
@@ -118,7 +110,6 @@ export const useAuthStore = defineStore('auth', {
             try {
                 if (typeof window !== 'undefined' && window.localStorage) {
                     const token = localStorage.getItem('token');
-                    console.log(token);
                     this.token = token
                     if (!token) {
                         this.isLoggedIn = false;
@@ -164,7 +155,6 @@ export const useAuthStore = defineStore('auth', {
                 const router = useRouter();
                 if (router) {
                     router.push('/login');
-                    console.log("logged out and satus is: ", this.isLoggedIn);
                 } else {
                     console.error('Router is not defined');
                 }

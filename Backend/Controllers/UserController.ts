@@ -36,14 +36,12 @@ class UserController {
 
       const profilePic = req.file ? req.file.path : "public/uploads/profile-pics/download.png";
 
-      console.log(profilePic);
       const newUser = new User({
         email: data.email,
         password: hashedPassword,
         name: data.name,
         profilePicture: profilePic
       });
-      console.log(newUser);
       await newUser.saveUser();
       return res.status(200).json({ message: 'User added Succefully' });
     } catch (err) {
@@ -86,7 +84,6 @@ class UserController {
       const userId: mongoose.Types.ObjectId =
         foundUser._id as mongoose.Types.ObjectId;
 
-      console.log('User found');
 
       // Check if Redis client is alive before interacting with it
       if (!redisClient.isAlive()) {
@@ -167,7 +164,6 @@ class UserController {
       const user = await User.findById({ _id: foundToken });
             if (!user)
                 return res.status(404).json({error: "user not found "});
-            console.log("User retrived");
             return res.status(200).json({user});
     } catch (error) {
         console.error('Error checking token in Redis:', error);

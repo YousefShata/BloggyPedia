@@ -48,10 +48,7 @@ onMounted(async () => {
     await blogStore.getBlog(blogId); // Fetch the blog details
     blog.value = blogStore.blog; // Assign the data to blog
     await blogStore.checkAuthor();
-    if (process.client) {
-      console.log(blog.value);
-      console.log(blog.value._id);
-    }
+
     if (blog.value.userId === blogStore.currentUser) {
       isAuthor.value = true;
     }
@@ -60,8 +57,7 @@ onMounted(async () => {
   }
 });
 
-const goToEditBlog = () => {
-  console.log(blog.value._id);
+const goiToEditBlog = () => {
   if (router) {
     router.push(`/editBlog/${blog.value._id}`);
   } else {

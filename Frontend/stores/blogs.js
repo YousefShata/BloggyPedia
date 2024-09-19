@@ -35,7 +35,6 @@ export const useBlogStore = defineStore('blogs', {
         async createBlog(data) {
             try {
                 const response = await axios.post('http://localhost:5000/api/createBlog', data);
-                console.log(response);
                 this.blogs.push(response.data); // Add the saved blog to the state
               } catch (error) {
                 console.error('Failed to save blog:', error.response.data);
@@ -44,7 +43,6 @@ export const useBlogStore = defineStore('blogs', {
         async editBlog(blogId, data) {
             try {
                 const response = await axios.put(`http://localhost:5000/api/editBlog/${blogId}`, data);
-                console.log(response);
                 this.blog = response.data;
               } catch (error) {
                 console.error('Failed to save blog:', error.response.data);
@@ -59,7 +57,6 @@ export const useBlogStore = defineStore('blogs', {
                         this.isLoggedIn = false;
                         return;
                     }
-                console.log(token);
                 const response = await axios.get('http://localhost:5000/api/checkAuthor', {
                     headers: {
                     'Authorization': `Bearer ${token}`
@@ -76,5 +73,14 @@ export const useBlogStore = defineStore('blogs', {
                 console.error('Failed to delete blog:', error.response.data);
               }
         },
+
+        async getUserBlogs(userId){
+            try {
+                const response = await axios.get(`http://localhost:5000/api/getUserBlogs/${userId}`);
+                this.blogs = response.data.allBlogs;
+              } catch (error) {
+                console.error("Failed to fetch user blogs:", error);
+              }
+        }
     },
 });

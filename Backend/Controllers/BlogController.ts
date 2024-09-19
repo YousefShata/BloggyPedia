@@ -48,7 +48,7 @@ class BlogController {
             console.log("New Blog has been Saved");
             return res.status(200).json(blog);
         } catch (error) {
-            return res.status(500).json({erro: error});
+            return res.status(500).json({error: error});
         }
     }
 
@@ -60,7 +60,6 @@ class BlogController {
             const blog = await Blog.findById({ _id: blogId });
             if (!blog)
                 return res.status(404).json({error: "Blog not found "});
-            console.log("Blog retrived");
             return res.status(200).json({blog});
         } catch (error) {
            return res.status(500).json({error: error});
@@ -93,7 +92,6 @@ class BlogController {
         if (!data.title || typeof data.content !== 'string') {
             return res.status(400).json({ error: 'No title provided.' });
         }
-        console.log("UpdatedBlog ID: "+ blogId);
         try {
             const updatedBlog = await Blog.findByIdAndUpdate(
                 blogId, 
@@ -103,7 +101,6 @@ class BlogController {
             if (!updatedBlog)
                 return res.status(404).json({error: "Blog not found "});
 
-            console.log("Blog retrived");
             return res.status(200).json({updatedBlog});
         } catch (error) {
            return res.status(500).json({error: error});
@@ -145,6 +142,18 @@ class BlogController {
           } catch (error) {
             return res.status(500).json({ error: "Failed to delete blog" });
           }
+    }
+
+    static async getUserBlogs(req: Request, res: Response){
+        const { userId } = req.params;
+        if (!userId)
+            return res.status(404).json({error:"No User ID provided"});
+        try {
+            const allBlogs = await Blog.find({ userId: userId });
+            res.status(200).json({allBlogs});
+        } catch (error){
+            res.status(500).json({error: error});
+        }
     }
 }
 

@@ -1,35 +1,44 @@
 <template>
-  <div class="container mx-auto p-6">
-    <h2 class="text-2xl font-bold mb-4">Edit your blog</h2>
+  <div v-if="loading">
+    <!-- Show loading message or spinner while the check is happening -->
+    <p>Loading...</p>
+  </div>
+  <div v-else>
+    <div class="container mx-auto p-6">
+      <h2 class="text-2xl font-bold mb-4">Edit your blog</h2>
 
-    <button class="bg-red-500 text-white px-4 py-2 rounded" @click="deleteBlog">
-      Delete Blog
-    </button>
-
-    <!-- Title Input Field -->
-    <div class="mb-4">
-      <label for="blogTitle" class="block text-lg font-semibold mb-2"
-        >Title</label
+      <button
+        class="bg-red-500 text-white px-4 py-2 rounded"
+        @click="deleteBlog"
       >
-      <input
-        id="blogTitle"
-        v-model="blog.title"
-        type="text"
-        placeholder="Enter blog title"
-        class="w-full p-3 border rounded"
-      />
+        Delete Blog
+      </button>
+
+      <!-- Title Input Field -->
+      <div class="mb-4">
+        <label for="blogTitle" class="block text-lg font-semibold mb-2"
+          >Title</label
+        >
+        <input
+          id="blogTitle"
+          v-model="blog.title"
+          type="text"
+          placeholder="Enter blog title"
+          class="w-full p-3 border rounded"
+        />
+      </div>
+
+      <!-- Summernote Editor -->
+      <textarea ref="summernote" class="w-full p-3 border rounded"></textarea>
+
+      <!-- Submit Button -->
+      <button
+        class="bg-black text-white py-2 px-3 rounded mt-4"
+        @click="updateBlog"
+      >
+        Save Changes
+      </button>
     </div>
-
-    <!-- Summernote Editor -->
-    <textarea ref="summernote" class="w-full p-3 border rounded"></textarea>
-
-    <!-- Submit Button -->
-    <button
-      class="bg-black text-white py-2 px-3 rounded mt-4"
-      @click="updateBlog"
-    >
-      Save Changes
-    </button>
   </div>
 </template>
 
@@ -46,15 +55,21 @@ const authStore = useAuthStore();
 
 const summernote = ref(null);
 const blog = ref("");
+const loading = ref(true);
 
 // Fetch the blog data when the component is mounted
 onMounted(async () => {
   const blogId = route.params.id;
-  console.log("I am in Edit " + blogId);
   try {
     await blogStore.getBlog(blogId);
     blog.value = blogStore.blog;
-    console.log(blog.value);
+    await blogStore.checkAuthor();
+
+    if (blog.value.userId !== blogStore.currentUser) {
+      router.push("/");
+    } else {
+      loading.value = false; // Only show the page if the user is the author
+    }
 
     if (process.client) {
       $(summernote.value).summernote({
@@ -77,14 +92,12 @@ onMounted(async () => {
     }
   } catch (err) {
     console.log("Failed to fetch blog:", err);
+    router.push("/");
   }
 });
 
 const updateBlog = async () => {
   const content = $(summernote.value).summernote("code");
-
-  console.log(" title: " + blog.value.title);
-  console.log(" content: " + blog.value.content);
 
   if (!blog.value || !blog.value.title) {
     alert("Please enter a blog title");

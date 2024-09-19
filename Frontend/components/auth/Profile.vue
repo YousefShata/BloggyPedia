@@ -64,6 +64,21 @@
           Delete Account
         </button>
       </form>
+      <h3 class="text-xl font-semibold mb-4">Your Blogs:</h3>
+
+      <div v-if="blogs.length" class="mt-8">
+        <ul class="space-y-2">
+          <li
+            v-for="blog in blogs"
+            :key="blog._id"
+            class="text-blue-500 hover:underline"
+          >
+            <router-link :to="`/getBlog/${blog._id}`">{{
+              blog.title
+            }}</router-link>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -72,11 +87,15 @@
 import { ref } from "vue";
 import { useRouter } from "#app";
 import { useAuthStore } from "@/stores/auth";
+import { useBlogStore } from "@/stores/blogs";
 const user = ref({
   profilePicturePreview: "",
 });
 
+const blogs = ref([]);
+
 const authStore = useAuthStore();
+const blogStore = useBlogStore();
 
 const router = useRouter();
 
@@ -84,6 +103,14 @@ onMounted(async () => {
   await authStore.myProfile();
   user.value = authStore.user; // Update posts with the store data
   user.profilePicturePreview = `http://localhost:5000/${user.value.profilePicture}`;
+
+  try {
+    await blogStore.getUserBlogs(user.value._id);
+    blogs.value = blogStore.blogs;
+    console.log(blogStore.blogs);
+  } catch (error) {
+    console.error("Failed to fetch user blogs:", error);
+  }
 });
 
 const handleFileUpload = (event) => {

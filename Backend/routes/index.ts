@@ -28,6 +28,7 @@ router.put('/api/editBlog/:blogId', BlogController.editBlog);
 router.get('/api/checkAuthor', BlogController.checkAuthor);
 router.delete('/api/deleteBlog/:blogId', BlogController.deleteBlog);
 router.delete('/api/deleteProfile', UserController.deleteProfile);
+router.get('/api/getUserBlogs/:userId', BlogController.getUserBlogs);
 
 //router.get('/api/login', func);
 //router.get('/api/logout', func);
