@@ -57,9 +57,31 @@ const summernote = ref(null);
 const blog = ref("");
 const loading = ref(true);
 
-// Fetch the blog data when the component is mounted
+const initializeSummernote = () => {
+  if (process.client) {
+    $(summernote.value).summernote({
+      placeholder: "Edit your content...",
+      tabsize: 2,
+      height: 200,
+      toolbar: [
+        ["style", ["style"]],
+        ["font", ["bold", "underline", "clear", "fontsize"]],
+        ["color", ["color"]],
+        ["para", ["ul", "ol", "paragraph"]],
+        ["table", ["table"]],
+        ["insert", ["link", "picture", "video"]],
+        ["view", ["fullscreen", "codeview", "help"]],
+      ],
+      fontsize: ["8", "9", "10", "11", "12", "14", "16", "18", "24", "36"],
+    });
+
+    $(summernote.value).summernote("code", blog.value.content || "");
+  }
+};
+
 onMounted(async () => {
   const blogId = route.params.id;
+
   try {
     await blogStore.getBlog(blogId);
     blog.value = blogStore.blog;
@@ -69,29 +91,12 @@ onMounted(async () => {
       router.push("/");
     } else {
       loading.value = false; // Only show the page if the user is the author
-    }
 
-    if (process.client) {
-      $(summernote.value).summernote({
-        placeholder: "Edit your content...",
-        tabsize: 2,
-        height: 200,
-        toolbar: [
-          ["style", ["style"]],
-          ["font", ["bold", "underline", "clear", "fontsize"]],
-          ["color", ["color"]],
-          ["para", ["ul", "ol", "paragraph"]],
-          ["table", ["table"]],
-          ["insert", ["link", "picture", "video"]],
-          ["view", ["fullscreen", "codeview", "help"]],
-        ],
-        fontsize: ["8", "9", "10", "11", "12", "14", "16", "18", "24", "36"],
-      });
-      // Set the content in Summernote editor
-      $(summernote.value).summernote("code", blog.value.content);
+      await nextTick();
+      initializeSummernote();
     }
   } catch (err) {
-    console.log("Failed to fetch blog:", err);
+    console.log("Error fetching blog or checking author:", err);
     router.push("/");
   }
 });

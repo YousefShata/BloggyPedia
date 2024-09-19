@@ -57,7 +57,7 @@ onMounted(async () => {
   }
 });
 
-const goiToEditBlog = () => {
+const goToEditBlog = () => {
   if (router) {
     router.push(`/editBlog/${blog.value._id}`);
   } else {
