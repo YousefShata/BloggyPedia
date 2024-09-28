@@ -15,13 +15,10 @@
         <div class="flex-1">
           <h2 class="text-2xl font-semibold mb-2">{{ post.title }}</h2>
           <p class="text-gray-700 text-sm mb-4">By {{ post.userId.name }}</p>
-          <p class="text-gray-800 mb-4" v-html=getTrunctedText(post.content.toString())></p>
-          <button
-            @click="goToPost(post._id)"
-            class="text-white bg-black px-4 py-2 rounded-md"
-          >
+          <p class="text-gray-800 mb-4 inline" v-html=getTrunctedText(post.content.toString())></p>
+          <nuxt-link :to="`/getBlog/${post._id}`" class="text-gray-500 text-sm hover:text-black hover:no-underline">
             Read More
-          </button>
+          </nuxt-link>
         </div>
       </div>
     </div>
@@ -66,11 +63,11 @@ const getTrunctedText = (content) => {
   return truncatedContent;
 }
 
-function goToPost(Id) {
-  if (router) {
-    router.push(`/getBlog/${Id}`);
-  } else {
-    console.error("Router is not defined");
-  }
-}
+// function goToPost(Id) {
+//   if (router) {
+//     router.push(`/getBlog/${Id}`);
+//   } else {
+//     console.error("Router is not defined");
+//   }
+// }
 </script>

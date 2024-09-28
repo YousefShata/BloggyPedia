@@ -32,6 +32,24 @@
         </template>
       </div>
 
+      <!-- Center: Search Bar -->
+       <div>
+        <form @submit.prevent="handleSearch" class="flex items-center space-x-2">
+          <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search blogs..."
+              class="text-black px-4 py-2 rounded-lg focus:outline-none focus:ring-gray-400"
+            />
+            <button
+              type="submit"
+              class="bg-white text-black py-2 px-4 rounded-lg hover:bg-gray-200"
+            >
+            Search
+          </button>
+        </form>
+       </div>
+
       <!-- Right side: Logout Button -->
       <div>
         <template v-if="authStore.isLoggedIn">
@@ -63,9 +81,17 @@
 </style>
 
 <script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { useBlogStore } from "@/stores/blogs";
+
 
 const authStore = useAuthStore();
+const blogStore = useBlogStore();
+const router = useRouter();
+
+const searchQuery = ref("")
 
 const profile = () => {
   authStore.myProfile();
@@ -73,5 +99,17 @@ const profile = () => {
 
 const logout = () => {
   authStore.logout();
+};
+
+const handleSearch = async () => {
+  if (searchQuery.value) {
+    try {
+      await blogStore.searchBlogs(searchQuery.value);
+      console.log(searchQuery.value);
+      router.push({ path: "search", query: { q: searchQuery.value } });
+    } catch (error) {
+      console.log("Error while searching for blogs:", error);
+    }
+  }
 };
 </script>
