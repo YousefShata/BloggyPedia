@@ -9,6 +9,7 @@ export const useBlogStore = defineStore('blogs', {
         blog: null,
         currentUser: null,
         searchResults: [],
+        likedPosts: [],
     }),
     actions: {
         // Here we will handle what happens
@@ -93,6 +94,24 @@ export const useBlogStore = defineStore('blogs', {
             } catch (error) {
                 console.error("Failed to fetch user blogs:", error);
             }
-        }
+        },
+        async likePost(blogId) {
+            try {
+                this.likedPosts.push(blogId);
+                await axios.post(`http://localhost:5000/api/favourite/${blogId}`);
+                console.log("blog id liked: ", this.likedPosts);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async unlikePost(blogId) {
+            console.log("blog id unliked bfore: ", this.likedPosts);
+            await axios.delete(`http://localhost:5000/api/favourite/${blogId}`);
+            let index = this.likedPosts.indexOf(blogId);
+            if (index !== -1) {
+                this.likedPosts.splice(index, 1);
+            }
+            console.log("blog id unliked after: ", this.likedPosts);
+        },
     },
 });

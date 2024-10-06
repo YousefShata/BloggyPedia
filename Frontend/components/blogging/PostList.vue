@@ -19,6 +19,12 @@
           <nuxt-link :to="`/getBlog/${post._id}`" class="text-gray-500 text-sm hover:text-black hover:no-underline">
             Read More
           </nuxt-link>
+          <nuxt-link
+          class="font-bold block mt-2 hover:cursor-pointer hover:no-underline text-[#00f] hover:text-gray-500"
+          @click="(event) => likeClick(event, post._id)"
+          data-liked = "false"
+          :to="`/`"
+          >Like</nuxt-link>
         </div>
       </div>
     </div>
@@ -32,6 +38,7 @@ import { useBlogStore } from "@/stores/blogs";
 import { post } from "jquery";
 const router = useRouter();
 const blogStore = useBlogStore();
+// const authstore = useAuthStore();
 const posts = ref([]);
 
 onMounted(async () => {
@@ -61,6 +68,24 @@ const getTrunctedText = (content) => {
   }
 
   return truncatedContent;
+}
+
+async function likeClick(event, postId) {
+  let liked = event.target.getAttribute('data-liked') === 'true';
+  
+  if (liked) {
+    event.target.innerHTML = "Like"
+    event.target.style.color = "blue";
+    blogStore.unlikePost(postId);
+  } else {
+    event.target.innerHTML = "Liked";
+    event.target.style.color = "Black";
+    blogStore.likePost(postId);
+    console.log(postId);
+  }
+  event.target.setAttribute("data-liked", !liked);
+
+  console.log(event.target.innerHTML);
 }
 
 // function goToPost(Id) {
