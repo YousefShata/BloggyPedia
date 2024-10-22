@@ -1,5 +1,10 @@
 import UserController from '../Controllers/UserController';
 import BlogController from '../Controllers/BlogController';
+// import {
+//   likeBlog,
+//   unlikeBlog,
+//   getUserLikedBlogs,
+// } from '../controllers/LikeController';
 import multer from 'multer';
 import path from 'path';
 import { Router } from 'express';
@@ -32,11 +37,14 @@ router.put(
   upload.single('profilePicture'),
   UserController.updateProfile,
 );
+router.post('/api/favourite/:blogId', UserController.favouriteBlog);
 router.put('/api/editBlog/:blogId', BlogController.editBlog);
 router.get('/api/checkAuthor', BlogController.checkAuthor);
 router.delete('/api/deleteBlog/:blogId', BlogController.deleteBlog);
 router.delete('/api/deleteProfile', UserController.deleteProfile);
 router.get('/api/getUserBlogs/:userId', BlogController.getUserBlogs);
 router.get('/api/search', BlogController.searchBlog);
-
+// router.post('/api/favourite/:blogId', BlogController.likeBlog);
+// router.delete('/api/favourite/:blogId', BlogController.unlikeBlog);
+// router.get('/api/favourites', BlogController.getUserLikedBlogs);
 export default router;

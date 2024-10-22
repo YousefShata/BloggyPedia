@@ -1,6 +1,7 @@
 // stores/blogs.js
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useAuthStore } from '#imports';
 
 export const useBlogStore = defineStore('blogs', {
     state: () => ({
@@ -12,10 +13,6 @@ export const useBlogStore = defineStore('blogs', {
         likedPosts: [],
     }),
     actions: {
-        // Here we will handle what happens
-        // when a user hits a route (like controllers in the backend)
-
-        /* Example function */
         async getAllBlogs() {
             try {
                 const response = await axios.get('http://localhost:5000/api/getAllBlogs');
@@ -95,8 +92,10 @@ export const useBlogStore = defineStore('blogs', {
                 console.error("Failed to fetch user blogs:", error);
             }
         },
+        // Still trying to access backend to save and remove favourite blog
         async likePost(blogId) {
             try {
+                const authStore = useAuthStore()
                 this.likedPosts.push(blogId);
                 await axios.post(`http://localhost:5000/api/favourite/${blogId}`);
                 console.log("blog id liked: ", this.likedPosts);
