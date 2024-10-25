@@ -5,9 +5,10 @@ class RedisClient {
     isClientConnected: boolean;
 
     constructor() {
+        const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
         // Create a new Redis client
         this.client = createClient({
-            url: 'redis://127.0.0.1:6379', // Point to the correct Redis server
+            url: redisUrl, // Point to the correct Redis server
         });
 
         this.isClientConnected = false;

@@ -14,8 +14,7 @@
           <label class="relative cursor-pointer">
             <img
               :src="
-                user.profilePicturePreview ||
-                `http://localhost:5000/${user.profilePicture}`
+                user.profilePicturePreview || `${apiUrl}/${user.profilePicture}`
               "
               alt="Profile Picture"
               class="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
@@ -84,6 +83,7 @@
 </template>
 
 <script setup>
+import { useRuntimeConfig } from "#app";
 import { ref } from "vue";
 import { useRouter } from "#app";
 import { useAuthStore } from "@/stores/auth";
@@ -98,12 +98,13 @@ const authStore = useAuthStore();
 const blogStore = useBlogStore();
 
 const router = useRouter();
+const config = useRuntimeConfig();
 
+const apiUrl = config.public.apiUrl;
 onMounted(async () => {
   await authStore.myProfile();
   user.value = authStore.user; // Update posts with the store data
-  user.profilePicturePreview = `http://localhost:5000/${user.value.profilePicture}`;
-
+  user.profilePicturePreview = `${apiUrl}/${user.value.profilePicture}`;
   try {
     await blogStore.getUserBlogs(user.value._id);
     blogs.value = blogStore.blogs;

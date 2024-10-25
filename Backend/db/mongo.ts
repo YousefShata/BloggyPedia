@@ -5,7 +5,7 @@ class DBClient{
     isConnected = false;
     db = null;
     constructor(){
-        const uri = 'mongodb://localhost:27017/BloggyPedia';
+        const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/BloggyPedia';
         mongoose.connect(uri).then(() => {
             this.isConnected = true;
             this.db = this.client.db('BloggyPedia');

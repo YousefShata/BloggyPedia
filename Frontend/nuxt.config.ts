@@ -1,5 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:5000'  // Default to localhost
+    }
+  },
+  vite: {
+    optimizeDeps: {
+      include: ['jquery']
+    }
+  },
   css: [
     "~/assets/css/main.css", // Your Tailwind CSS file
     "bootstrap/dist/css/bootstrap.min.css",

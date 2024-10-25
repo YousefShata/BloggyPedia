@@ -13,8 +13,9 @@ export const useAuthStore = defineStore('auth', {
     }),
     actions: {
         async register(credentials) {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
             try {
-                await axios.post('http://localhost:5000/api/register', credentials,{
+                await axios.post(`${apiUrl}/api/register`, credentials,{
                     headers: {
                     'Content-Type': 'multipart/form-data'
                     }
@@ -32,7 +33,8 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async login(credentials) {
-            const response = await axios.post('http://localhost:5000/api/login', credentials);
+            const apiUrl = useRuntimeConfig().public.apiUrl;
+            const response = await axios.post(`${apiUrl}/api/login`, credentials);
             this.user = response.data.user;
             this.token = response.data.token;
             this.isLoggedIn = true;
@@ -44,9 +46,10 @@ export const useAuthStore = defineStore('auth', {
             axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
         },
         async logout() {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
             try {
                 this.token = localStorage.getItem('token');
-                await axios.post('http://localhost:5000/api/logout', {}, {
+                await axios.post(`${apiUrl}/api/logout`, {}, {
                     headers: {
                         'Authorization': `Bearer ${this.token}`
                     }
@@ -68,6 +71,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async checkLogin() {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
             try {
                 //if (process.server) return;
                 if (typeof window !== 'undefined' && window.localStorage) {
@@ -78,7 +82,7 @@ export const useAuthStore = defineStore('auth', {
                         return;
                     }
                 }
-                const response = await axios.get('http://localhost:5000/api/check-auth', {
+                const response = await axios.get(`${apiUrl}/api/check-auth`, {
                     headers: {
                         'Authorization': `Bearer ${this.token}`
                     }
@@ -107,6 +111,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async myProfile() {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
             try {
                 if (typeof window !== 'undefined' && window.localStorage) {
                     const token = localStorage.getItem('token');
@@ -117,7 +122,7 @@ export const useAuthStore = defineStore('auth', {
                     }
                 }
 
-                const response = await axios.get(`http://localhost:5000/api/profile`,{ headers: {
+                const response = await axios.get(`${apiUrl}/api/profile`,{ headers: {
                     'Authorization': `Bearer ${this.token}`
                     }
                 });
@@ -130,8 +135,9 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async UpdateProfile(credentials){
+            const apiUrl = useRuntimeConfig().public.apiUrl;
             try{
-            const response = await axios.put('http://localhost:5000/api/updateProfile', credentials,{
+            const response = await axios.put(`${apiUrl}/api/updateProfile`, credentials,{
                 headers: {
                 'Content-Type': 'multipart/form-data'
                 }
@@ -144,8 +150,9 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async deleteProfile() {
+            const apiUrl = useRuntimeConfig().public.apiUrl;
             try {
-                await axios.delete(`http://localhost:5000/api/deleteProfile`, {
+                await axios.delete(`${apiUrl}/api/deleteProfile`, {
                     params: { id: this.user._id }, // Send user ID as a query parameter
                   });
                 this.user = null;

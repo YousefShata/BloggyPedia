@@ -23,6 +23,7 @@ WORKDIR /app
 # Copy the build output from the previous stage
 COPY --from=build /app/.output ./
 
+COPY .env ./
 # Expose the port on which the frontend will run (optional but good practice)
 EXPOSE 3000
 

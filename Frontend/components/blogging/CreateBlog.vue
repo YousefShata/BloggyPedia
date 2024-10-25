@@ -26,6 +26,7 @@
 import { ref, onMounted } from "vue"; // refence elements to bind them to the template
 import { useRouter } from "#app"; // for routing
 import { useBlogStore } from "@/stores/blogs";
+import $ from '/node_modules/jquery/dist/jquery.js';
 
 const authStore = useAuthStore();
 

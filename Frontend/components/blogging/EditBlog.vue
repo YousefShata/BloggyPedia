@@ -47,6 +47,7 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "#app";
 import { useBlogStore } from "@/stores/blogs";
 import { useAuthStore } from "@/stores/auth"; // Added auth store reference
+import $ from "/node_modules/jquery/dist/jquery.js";
 
 const router = useRouter();
 const route = useRoute();

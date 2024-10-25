@@ -1,14 +1,13 @@
-version: '3.9'
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      container_name: frontend
+    container_name: frontend
     ports:
-      - "3000:3000"  # Map frontend container port to host
+      - "3000:3000" # Map frontend container port to host
     environment:
-      - NUXT_PUBLIC_API_URL=http://localhost:5000
+      - NUXT_PUBLIC_API_URL=http://backend:5000
     networks:
       - app-network
     depends_on:
@@ -18,11 +17,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      container_name: backend
+    container_name: backend
     ports:
-      - "5000:5000"  # Map backend container port to host
+      - "5000:5000" # Map backend container port to host
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      - MONGO_URI=mongodb://mongo:27017/BloggyPedia
       - REDIS_URL=redis://redis:6379
     depends_on:
       - mongo

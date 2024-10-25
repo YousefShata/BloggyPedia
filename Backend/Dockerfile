@@ -34,4 +34,4 @@ COPY .env ./
 EXPOSE 5000
 
 # Start the backend
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/src/index.js"]
