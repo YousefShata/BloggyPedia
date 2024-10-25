@@ -26,7 +26,7 @@
 import { ref, onMounted } from "vue"; // refence elements to bind them to the template
 import { useRouter } from "#app"; // for routing
 import { useBlogStore } from "@/stores/blogs";
-import $ from '/node_modules/jquery/dist/jquery.js';
+// import $ from '/node_modules/jquery/dist/jquery.js';
 
 const authStore = useAuthStore();
 
@@ -35,6 +35,7 @@ const blogStore = useBlogStore();
 const summernote = ref(null);
 onMounted(() => {
   if (process.client) {
+    const $ = require('jquery'); // Added it here instead
     $(summernote.value).summernote({
       placeholder: "Start typing...",
       tabsize: 2,
