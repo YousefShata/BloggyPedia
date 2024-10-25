@@ -10,14 +10,15 @@ export const useAuthStore = defineStore('auth', {
         token: null,
         isLoggedIn: false,
         loading: true,
+        // apiUrl: useRuntimeConfig().public.apiUrl,
     }),
     actions: {
         async register(credentials) {
             const apiUrl = useRuntimeConfig().public.apiUrl;
             try {
-                await axios.post(`${apiUrl}/api/register`, credentials,{
+                await axios.post(`${apiUrl}/api/register`, credentials, {
                     headers: {
-                    'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data'
                     }
                 });
                 this.isLoggedIn = false;
@@ -87,7 +88,7 @@ export const useAuthStore = defineStore('auth', {
                         'Authorization': `Bearer ${this.token}`
                     }
                 });
-    
+
                 if (response.status == 200) {
                     console.log("status 200");
                     this.isLoggedIn = true;
@@ -122,8 +123,9 @@ export const useAuthStore = defineStore('auth', {
                     }
                 }
 
-                const response = await axios.get(`${apiUrl}/api/profile`,{ headers: {
-                    'Authorization': `Bearer ${this.token}`
+                const response = await axios.get(`${apiUrl}/api/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${this.token}`
                     }
                 });
                 this.user = response.data.user;
@@ -134,18 +136,18 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async UpdateProfile(credentials){
+        async UpdateProfile(credentials) {
             const apiUrl = useRuntimeConfig().public.apiUrl;
-            try{
-            const response = await axios.put(`${apiUrl}/api/updateProfile`, credentials,{
-                headers: {
-                'Content-Type': 'multipart/form-data'
-                }
-            });
-            this.user = response.data
-        } catch (error) {
-        console.error('Failed to update profile:', error);
-        throw error; // Re-throw error to handle it in the component
+            try {
+                const response = await axios.put(`${apiUrl}/api/updateProfile`, credentials, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                this.user = response.data
+            } catch (error) {
+                console.error('Failed to update profile:', error);
+                throw error; // Re-throw error to handle it in the component
             }
         },
 
@@ -154,20 +156,20 @@ export const useAuthStore = defineStore('auth', {
             try {
                 await axios.delete(`${apiUrl}/api/deleteProfile`, {
                     params: { id: this.user._id }, // Send user ID as a query parameter
-                  });
+                });
                 this.user = null;
                 this.token = null;
                 this.isLoggedIn = false;
-                
+
                 const router = useRouter();
                 if (router) {
                     router.push('/login');
                 } else {
                     console.error('Router is not defined');
                 }
-              } catch (error) {
+            } catch (error) {
                 console.error('Failed to delete the User:', error.response.data);
-              }
+            }
         },
     },
 });
