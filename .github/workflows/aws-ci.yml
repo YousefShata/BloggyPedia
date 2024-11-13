@@ -1,0 +1,51 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: MY_AWS_REGION                 # Set to your AWS region, e.g., us-west-1
+  EC2_INSTANCE_ID: MY_EC2_INSTANCE_ID       # Set to your EC2 instance ID
+  EC2_USER: ec2-user                        # Default user for EC2 instances on Amazon Linux; change if necessary
+  EC2_HOST: MY_EC2_PUBLIC_IP                # Set this to your EC2 instance’s public IP
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Copy files to EC2
+      uses: appleboy/scp-action@v0.1.1
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "./"
+        target: "~/app"   # Path on EC2 instance where the app should be copied
+
+    - name: Install dependencies and start application on EC2
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ~/app
+          # For Node.js app, install dependencies, build frontend, and restart backend server
+          npm install
+          npm run build
+          pm2 restart app || pm2 start backend/index.js --name app   # Adjust path to your backend entry file
